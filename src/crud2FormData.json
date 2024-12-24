@@ -1,0 +1,20 @@
+[
+    {
+      "company": "Company A",
+      "status": "Pending",
+      "user": "John Doe",
+      "updates": "Awaiting approval"
+    },
+    {
+      "company": "Company B",
+      "status": "In Progress",
+      "user": "Jane Smith",
+      "updates": "Work started"
+    },
+    {
+      "company": "Company A",
+      "status": "Completed",
+      "user": "John Doe",
+      "updates": "Task finished"
+    }
+  ]

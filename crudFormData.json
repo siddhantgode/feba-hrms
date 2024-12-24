@@ -1,0 +1,38 @@
+[
+  {
+    "id": null,
+    "companyName": "Feba Tech",
+    "location": "Hyderabad",
+    "address": "Begumpet",
+    "contactPerson": "MR Sai",
+    "contactNumber": "12345678",
+    "email": "siddhantgode@gmail.com"
+  },
+  {
+    "id": 1734639220908,
+    "companyName": "TCS",
+    "location": "Hyderabad",
+    "address": "Hyderabad",
+    "contactPerson": "Mr Reddy",
+    "contactNumber": "12345678",
+    "email": "abc@TCS.com"
+  },
+  {
+    "id": 1734639602727,
+    "companyName": "Infosys",
+    "location": "Mumbai",
+    "address": "Bandra",
+    "contactPerson": "Mr Kulkarni",
+    "contactNumber": "12345678900",
+    "email": "kulkarni@infosys.com"
+  },
+  {
+    "id": 1734667792271,
+    "companyName": "Feba Tech",
+    "location": "Hyderabad",
+    "address": "Begumpet",
+    "contactPerson": "MR Sai",
+    "contactNumber": "12345678",
+    "email": "siddhantgode@gmail.com"
+  }
+]

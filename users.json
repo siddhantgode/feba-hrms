@@ -1,0 +1,43 @@
+[
+  {
+    "id": null,
+    "name": "admin",
+    "contactNumber": "hyderabad",
+    "email": "admin",
+    "dob": "2024-12-12",
+    "gender": "Male"
+  },
+  {
+    "id": null,
+    "name": "Siddhant",
+    "contactNumber": "8055544044",
+    "email": "siddhantgode@gmail.com",
+    "dob": "1991-12-14",
+    "gender": "Male"
+  },
+  {
+    "id": null,
+    "name": "MR Sai",
+    "contactNumber": "12345678",
+    "email": "siddhantgode@gmail.com",
+    "dob": "2024-12-26",
+    "gender": "Male"
+  },
+  {
+    "id": null,
+    "name": "MR Sai",
+    "contactNumber": "12345678",
+    "email": "siddhantgode@gmail.com",
+    "dob": "2024-12-12",
+    "gender": "Male"
+  },
+  {
+    "id": 1735046947998
+  },
+  {
+    "id": 1735049872151
+  },
+  {
+    "id": 1735052007704
+  }
+]

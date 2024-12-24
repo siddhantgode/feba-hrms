@@ -1,0 +1,36 @@
+[
+  {
+    "id": null,
+    "name": "admin",
+    "location": "dd",
+    "address": "dd",
+    "contactPerson": "dd",
+    "contactNumber": "dd"
+  },
+  {
+    "id": null,
+    "name": "Feba Tech",
+    "location": "Hyderabad",
+    "address": "Begumpet",
+    "contactPerson": "MR Sai",
+    "contactNumber": "12345678"
+  },
+  {
+    "id": null,
+    "name": "xxxxxx",
+    "location": "",
+    "address": "",
+    "contactPerson": "",
+    "contactNumber": ""
+  },
+  {
+    "id": null,
+    "name": "Feba Tech",
+    "location": "Hyderabad",
+    "address": "Begumpet",
+    "contactPerson": "MR Sai",
+    "contactNumber": "12345678",
+    "email": "siddhantgode@gmail.com",
+    "website": "siddhantgode@gmail.com"
+  }
+]
