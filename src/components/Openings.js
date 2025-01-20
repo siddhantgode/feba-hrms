@@ -28,6 +28,8 @@ const Openings = () => {
     noOfTechnicalRounds: "",
   });
 
+  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setOpeningData((prevData) => ({
@@ -42,6 +44,36 @@ const Openings = () => {
       ...prevData,
       jdAttachment: file,
     }));
+  };
+
+  // Handle form reset
+  const handleClear = () => {
+    setOpeningData({
+      company: "",
+      designation: "",
+      reqReceivedDate: "",
+      profileSharedDate: "",
+      jd: "",
+      mandatorySkillSet: "",
+      shiftTimings: "",
+      contractFTE: "",
+      duration: "",
+      budget: "",
+      numberOfPositions: "",
+      endClientDetails: "",
+      lineupProfiles: "",
+      profileStatus: "",
+      workType: "",
+      progressStatus: "",
+      bgv: "",
+      l1Questions: "",
+      l2Questions: "",
+      totalRelExp: "",
+      note: "",
+      jdAttachment: null,
+      laptopProvided: "",
+      noOfTechnicalRounds: "",
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -97,14 +129,30 @@ const Openings = () => {
       alert("Failed to submit the form");
     }
   };
+  
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5"
+    style={{
+      marginTop:"100px",
+      paddingRight: "15px",
+      borderRadius: "0px",
+    }}>
       <h2 className="mb-4">New Requirement</h2>
+
+      
       <form onSubmit={handleSubmit}>
-        {/* Company and Designation */}
+        {/* Form Elements in 3 Columns */}
+        <div
+        style={{
+          maxHeight: "500px",
+          overflowY: "scroll",
+          paddingRight: "15px",
+          borderRadius: "0px",
+        }}
+      >
         <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Company</label>
             <input
               type="text"
@@ -114,7 +162,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Designation</label>
             <input
               type="text"
@@ -124,11 +172,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-        </div>
-
-        {/* Req. received Date and Profile shared date */}
-        <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Req. Received Date</label>
             <input
               type="date"
@@ -138,7 +182,10 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
+        </div>
+  
+        <div className="row mb-3">
+          <div className="col-md-4">
             <label className="form-label">Profile Shared Date</label>
             <input
               type="date"
@@ -148,23 +195,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-        </div>
-
-        {/* JD and Mandatory Skill Set */}
-        <div className="row mb-3">
-        <div className="col-md-6">
-            <label className="form-label">Total/Rel Exp</label>
-            <input
-              type="text"
-              className="form-control"
-              name="totalRelExp"
-              value={openingData.totalRelExp}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="col-md-6">
-          
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Mandatory Skill Set</label>
             <textarea
               className="form-control"
@@ -174,11 +205,20 @@ const Openings = () => {
               onChange={handleInputChange}
             ></textarea>
           </div>
+          <div className="col-md-4">
+            <label className="form-label">Total/Rel Exp</label>
+            <input
+              type="text"
+              className="form-control"
+              name="totalRelExp"
+              value={openingData.totalRelExp}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
-
-        {/* Shift Timings and Contract/FTE */}
+  
         <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Shift Timings</label>
             <input
               type="text"
@@ -188,7 +228,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Engagement Type</label>
             <select
               className="form-select"
@@ -201,15 +241,9 @@ const Openings = () => {
               <option value="FTE">FTE</option>
               <option value="Hybrid">Hybrid</option>
               <option value="Freelancer">Freelancer</option>
-
-
             </select>
           </div>
-        </div>
-
-        {/* Duration and Budget */}
-        <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Duration (if Contract)</label>
             <input
               type="text"
@@ -219,7 +253,10 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
+        </div>
+  
+        <div className="row mb-3">
+          <div className="col-md-4">
             <label className="form-label">Budget (Hrs/Month/Annum)</label>
             <input
               type="text"
@@ -229,11 +266,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-        </div>
-
-        {/* No. of Positions and End Client Details */}
-        <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">No. of Positions</label>
             <input
               type="number"
@@ -243,10 +276,8 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
-            <label className="form-label">
-              End Client Name & Location (US/UK/UAE/India/Aus/KSA)
-            </label>
+          <div className="col-md-4">
+            <label className="form-label">End Client Details</label>
             <input
               type="text"
               className="form-control"
@@ -256,10 +287,9 @@ const Openings = () => {
             />
           </div>
         </div>
-
-        {/* Lineup Profiles and Status of Profiles */}
+  
         <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Lineup Profiles</label>
             <input
               type="text"
@@ -269,7 +299,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Status of Profiles</label>
             <input
               type="text"
@@ -279,11 +309,7 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-        </div>
-
-        {/* Work Type and Progress Status */}
-        <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">Work Type</label>
             <input
               type="text"
@@ -293,10 +319,11 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-6">
-            <label className="form-label">
-              Hold by Client/Closed/In Progress
-            </label>
+        </div>
+  
+        <div className="row mb-3">
+          <div className="col-md-4">
+            <label className="form-label">Progress Status</label>
             <input
               type="text"
               className="form-control"
@@ -305,53 +332,60 @@ const Openings = () => {
               onChange={handleInputChange}
             />
           </div>
-        </div>
-
-        {/* BGV and Laptop Provided */}
-        <div className="row mb-3">
-        <div className="col-md-6">
-  <label className="form-label">BGV </label> 
-  <div className="form-check form-check-inline">
-    <input 
-      type="radio" 
-      id="bgvYes" 
-      name="bgv" 
-      value="Yes" 
-      checked={openingData.bgv === "Yes"} 
-      onChange={handleInputChange} 
-    />
-    <label className="form-check-label" htmlFor="bgvYes">Yes</label>
-  </div>
-  <div className="form-check form-check-inline">
-    <input 
-      type="radio" 
-      id="bgvNo" 
-      name="bgv" 
-      value="No" 
-      checked={openingData.bgv === "No"} 
-      onChange={handleInputChange} 
-    />
-    <label className="form-check-label" htmlFor="bgvNo">No</label>
-  </div>
-</div>
-          <div className="col-md-6">
-            <label className="form-label">Laptop Provided by Client (Y/N)</label>
-            <select
-              className="form-select"
-              name="laptopProvided"
-              value={openingData.laptopProvided}
-              onChange={handleInputChange}
-            >
-              <option value="">Select</option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
+          <div className="col-md-4">
+            <label className="form-label">BGV</label>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="bgvYes"
+                name="bgv"
+                value="Yes"
+                checked={openingData.bgv === "Yes"}
+                onChange={handleInputChange}
+              />
+              <label className="form-check-label" htmlFor="bgvYes">Yes</label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="bgvNo"
+                name="bgv"
+                value="No"
+                checked={openingData.bgv === "No"}
+                onChange={handleInputChange}
+              />
+              <label className="form-check-label" htmlFor="bgvNo">No</label>
+            </div>
+          </div>
+          <div className="col-md-4">
+            <label className="form-label">Laptop</label>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="laptopYes"
+                name="laptop"
+                value="Yes"
+                checked={openingData.laptop === "Yes"}
+                onChange={handleInputChange}
+              />
+              <label className="form-check-label" htmlFor="laptopYes">Yes</label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="laptopNo"
+                name="laptop"
+                value="No"
+                checked={openingData.laptop === "No"}
+                onChange={handleInputChange}
+              />
+              <label className="form-check-label" htmlFor="laptopNo">No</label>
+            </div>
           </div>
         </div>
-
-        {/* JD Attachment */}
+  
         <div className="row mb-3">
-        <div className="col-md-6">
+          <div className="col-md-4">
             <label className="form-label">JD</label>
             <textarea
               className="form-control"
@@ -361,7 +395,7 @@ const Openings = () => {
               onChange={handleInputChange}
             ></textarea>
           </div>
-          <div className="col-md-12">
+          <div className="col-md-4">
             <label className="form-label">JD Attachment</label>
             <input
               type="file"
@@ -370,11 +404,7 @@ const Openings = () => {
               onChange={handleFileChange}
             />
           </div>
-        </div>
-
-        {/* Total/Rel Exp and Note */}
-        <div className="row mb-3">
-         
+          <div className="col-md-4">
             <label className="form-label">Note</label>
             <textarea
               className="form-control"
@@ -385,10 +415,9 @@ const Openings = () => {
             ></textarea>
           </div>
         </div>
-
-        {/* Number of Technical Rounds */}
+  
         <div className="row mb-3">
-          <div className="col-md-12">
+          <div className="col-md-4">
             <label className="form-label">No. of Technical Rounds</label>
             <input
               type="number"
@@ -399,14 +428,27 @@ const Openings = () => {
             />
           </div>
         </div>
+  
+        </div>
 
-        {/* Submit Button */}
-        <div className="d-flex justify-content-end">
+      {/* Buttons */}
+      <div className="d-flex justify-content-end mt-3">
+          {/* Clear Button */}
+          <button
+            type="button"
+            className="btn btn-secondary me-2"
+            onClick={handleClear}
+          >
+            Clear
+          </button>
+
+          {/* Submit Button */}
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
         </div>
       </form>
+      
     </div>
   );
 };

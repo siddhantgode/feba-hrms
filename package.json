@@ -29,6 +29,7 @@
     "react-scripts": "^5.0.1",
     "react-table": "^7.8.0",
     "react-table-sticky": "^1.1.3",
+    "recharts": "^2.15.0",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -59,5 +60,5 @@
   "main": "server.js",
   "author": "",
   "license": "ISC",
-  "devDependencies": {}
+  "proxy": "http://localhost:3000/"
 }

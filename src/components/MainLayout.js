@@ -57,7 +57,7 @@ function MainLayout() {
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
-              <ListItemText primary="Users" />
+              <ListItemText primary="Resources" />
             </ListItem>
             <ListItem button component={Link} to="/crud-form">
               <ListItemIcon>
@@ -69,7 +69,7 @@ function MainLayout() {
               <ListItemIcon>
                 <HandshakeIcon />
               </ListItemIcon>
-              <ListItemText primary="Engagements" />
+              <ListItemText primary="Interviews" />
             </ListItem>
             <ListItem button component={Link} to="/openings">
               <ListItemIcon>

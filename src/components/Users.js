@@ -110,7 +110,13 @@ const ResourceTrackingForm = () => {
       <h2 className="mb-4">Resource Tracking Form</h2>
       <form onSubmit={handleSubmit}>
         {/* Client and Requirement */}
-        <div className="row mb-3">
+        <div className="row mb-3"
+        style={{
+          maxHeight: "500px",
+          overflowY: "scroll",
+          paddingRight: "15px",
+          borderRadius: "0px",
+        }}>
           <div className="col-md-6">
             <label className="form-label">Client</label>
             <input

@@ -10,6 +10,8 @@ import CrudForm from "./components/CrudForm"; // Ensure correct import
 import CRUD2Form from "./components/CRUD2form"; // Import the new CRUD2Form component
 import Chart from "./components/Chart";
 import Openings from "./components/Openings";
+import CompanyCountChart from "./charts";
+import ChartPage from "./ChartPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
         {/* Protected Routes with MainLayout */}
         <Route path="/" element={<MainLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="chart" element={<CompanyCountChart />} />
+          <Route path="chart1" element={<ChartPage />} />
           <Route path="users" element={<Users />} />
           <Route path="companies" element={<Companies />} />
           <Route path="engagements" element={<Engagements />} />
