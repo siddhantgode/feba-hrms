@@ -124,7 +124,9 @@ const Companies = () => {
   return (
     <Paper sx={{ p: 2 }}>
       {/* Page Title and Add Button */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem",
+       marginTop: '80px'
+      }}>
         <Typography variant="h5" gutterBottom>
           Companies
         </Typography>

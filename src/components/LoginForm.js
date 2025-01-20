@@ -30,14 +30,16 @@ function LoginForm() {
   };
 
   return (
-    <Box className="login-container">
+    <Box className="outer-container">
+      <Box className="login-container">
       {/* Logo */}
-      <img
-        src="https://www.febatech.com/wp-content/uploads/2021/08/febatech-300x74-1.png"
-        alt="FEBA Tech Logo"
-        className="logo"
-      />
-        Welcome to Feba HRMS
+      <Box className="logo-container">
+          <img
+            src="https://www.febatech.com/wp-content/uploads/2021/08/febatech-300x74-1.png"
+            alt="FEBA Tech Logo"
+            className="logo"
+          />
+        </Box>
       {/* Login Form */}
       <Box
         component="form"
@@ -86,6 +88,8 @@ function LoginForm() {
         )}
       </Box>
     </Box>
+    </Box>
+    
   );
 }
 

@@ -17,6 +17,7 @@ const companiesFilePath = path.join(__dirname, "companies.json");
 const engagementsFilePath = path.join(__dirname, "engagement.json");
 const crudFormFilePath = path.join(__dirname, "crudFormData.json"); // File for CRUD Form data
 const crud2FormFilePath = path.join(__dirname, "crud2FormData.json"); // File for CRUD2 Form data
+const openingsFilePath = path.join(__dirname, "openings.json");
 
 // Helper functions to read/write JSON files
 const readData = (filePath) => {
@@ -114,7 +115,7 @@ createCRUDRoutes(app, "/api/companies", companiesFilePath);
 createCRUDRoutes(app, "/api/engagements", engagementsFilePath);
 createCRUDRoutes(app, "/api/crudForm", crudFormFilePath); // CRUD Form route
 createCRUDRoutes(app, "/api/crud2Form", crud2FormFilePath); // CRUD2 Form route
-
+createCRUDRoutes(app, "/api/openings", openingsFilePath);
 // Serve users.json directly through an API route
 app.get("/users.json", (req, res) => {
   try {

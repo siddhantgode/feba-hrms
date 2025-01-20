@@ -1,465 +1,623 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  Paper,
-  Typography,
-  Button,
-  Grid,
-  TextField,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React, { useState } from "react";
 
-const Users = () => {
-  const [users, setUsers] = useState([]);
-  const [isFormVisible, setIsFormVisible] = useState(false); // Controls whether to show the form or DataGrid
-  const [currentUser, setCurrentUser] = useState({
-    id: null,
-    name: "",
-    contactNumber: "",
-    email: "",
-    dob: "",
-    gender: "",
-    pan: "",
-    aadhar: "",
-    education: "",
-    passport: "",
-    visaType: "",
+const ResourceTrackingForm = () => {
+  const [formData, setFormData] = useState({
+    client: "",
+    requirement: "",
+    candidateFullName: "",
+    sharedDateTA: "",
+    totalRelExp: "",
+    npLwd: "",
+    contactNumber1: "",
+    contactNumber2: "",
+    email1: "",
+    email2: "",
+    linkedIn: "",
+    resumeAttachment: null,
+    photograph: null,
+    panUpload: null,
+    aadhaarUpload: null,
     consultantType: "",
+    skillStack: "",
+    currentLocation: "",
+    preferredLocation: "",
+    education: "",
+    currentShift: "",
+    preferredShifts: "",
+    address: "",
+    passportVisa: "",
+    holdingOffers: "",
     ctc: "",
+    inhand: "",
     etc: "",
     rateClosed: "",
-    photo: null, // New field to store the uploaded photo
-    panPhoto: null, // New field to store the uploaded PAN photo
+    consultant: "",
+    domainExp: "",
+    resourceStatus: "",
+    bgv: "",
+    pan: "",
+    adhaar: "",
+    nearestClientOffice: "",
+    currentCompany: "",
   });
-  const [photoPreview, setPhotoPreview] = useState(null); // Preview of the uploaded photo
-  const [panPhotoPreview, setPanPhotoPreview] = useState(null); // Preview of the uploaded PAN photo
 
-  const API_URL = "http://localhost:5000/api/users";
+  const [resumePreview, setResumePreview] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [panPreview, setPanPreview] = useState(null);
+  const [aadhaarPreview, setAadhaarPreview] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const [skills, setSkills] = useState([{ skillName: "", experienceYears: "" }]);
+  const [showSkillModal, setShowSkillModal] = useState(false);
 
-  // Fetch users from the backend
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get(API_URL);
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching users:", error.response?.data || error.message);
-      alert("Failed to fetch users. Check the backend server.");
-    }
-  };
-
-  // Toggle visibility of the form
-  const handleFormVisibility = (visibility) => {
-    setIsFormVisible(visibility);
-    if (!visibility) {
-      // Reset form fields when returning to DataGrid
-      setCurrentUser({
-        id: null,
-        name: "",
-        contactNumber: "",
-        email: "",
-        dob: "",
-        gender: "",
-        pan: "",
-        aadhar: "",
-        education: "",
-        passport: "",
-        visaType: "",
-        consultantType: "",
-        ctc: "",
-        etc: "",
-        rateClosed: "",
-        photo: null,
-        panPhoto: null,
-      });
-      setPhotoPreview(null);
-      setPanPhotoPreview(null);
-    }
-  };
-
-  // Handle photo upload
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setCurrentUser((prev) => ({ ...prev, photo: file }));
-      setPhotoPreview(URL.createObjectURL(file)); // Generate a preview URL for the photo
-    }
-  };
-
-  // Handle PAN photo upload
-  const handlePanPhotoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setCurrentUser((prev) => ({ ...prev, panPhoto: file }));
-      setPanPhotoPreview(URL.createObjectURL(file)); // Generate a preview URL for the PAN photo
-    }
-  };
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    if (!currentUser.name || !currentUser.contactNumber || !currentUser.email || !currentUser.dob || !currentUser.gender) {
-      alert("Please fill in all required fields!");
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append("name", currentUser.name);
-      formData.append("contactNumber", currentUser.contactNumber);
-      formData.append("email", currentUser.email);
-      formData.append("dob", currentUser.dob);
-      formData.append("gender", currentUser.gender);
-      formData.append("pan", currentUser.pan);
-      formData.append("aadhar", currentUser.aadhar);
-      formData.append("education", currentUser.education);
-      formData.append("passport", currentUser.passport);
-      formData.append("visaType", currentUser.visaType);
-      formData.append("consultantType", currentUser.consultantType);
-      formData.append("ctc", currentUser.ctc);
-      formData.append("etc", currentUser.etc);
-      formData.append("rateClosed", currentUser.rateClosed);
-
-      if (currentUser.photo) {
-        formData.append("photo", currentUser.photo); // Attach the photo file
-      }
-      if (currentUser.panPhoto) {
-        formData.append("panPhoto", currentUser.panPhoto); // Attach the PAN photo file
-      }
-
-      if (currentUser.id) {
-        // Update existing user
-        await axios.put(`${API_URL}/${currentUser.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        setUsers((prev) =>
-          prev.map((user) => (user.id === currentUser.id ? { ...user, ...currentUser } : user))
-        );
-      } else {
-        // Create new user
-        const response = await axios.post(API_URL, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        setUsers((prev) => [...prev, response.data]);
-      }
-
-      handleFormVisibility(false); // Show DataGrid after submission
-    } catch (error) {
-      console.error("Error submitting user:", error.response?.data || error.message);
-      alert(
-        `Failed to save user. ${
-          error.response?.data?.error || "Check the backend server."
-        }`
-      );
-    }
-  };
-
-  // Handle input change in form fields
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentUser((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  // Handle user deletion
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-      setUsers((prev) => prev.filter((user) => user.id !== id)); // Remove the user from the list
-    } catch (error) {
-      console.error("Error deleting user:", error.response?.data || error.message);
-      alert("Failed to delete user. Check the backend server.");
-    }
+  // Handle file upload
+  const handleFileChange = (e) => {
+    const { name } = e.target;
+    const file = e.target.files[0];
+    setFormData((prev) => ({
+      ...prev,
+      [name]: file,
+    }));
+
+    if (name === "resumeAttachment") setResumePreview(URL.createObjectURL(file));
+    if (name === "photograph") setPhotoPreview(URL.createObjectURL(file));
+    if (name === "panUpload") setPanPreview(URL.createObjectURL(file));
+    if (name === "aadhaarUpload") setAadhaarPreview(URL.createObjectURL(file));
   };
 
-  // Define DataGrid columns
-  const columns = [
-    { field: "id", headerName: "ID", width: 70 },
-    { field: "name", headerName: "Name", width: 150 },
-    { field: "contactNumber", headerName: "Contact Number", width: 150 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "dob", headerName: "DOB", width: 120 },
-    { field: "gender", headerName: "Gender", width: 100 },
-    { field: "pan", headerName: "PAN", width: 120 },
-    { field: "aadhar", headerName: "Aadhar", width: 150 },
-    { field: "education", headerName: "Education", width: 150 },
-    { field: "passport", headerName: "Passport", width: 100 },
-    { field: "visaType", headerName: "Visa Type", width: 150 },
-    { field: "consultantType", headerName: "Consultant/FTE", width: 150 },
-    { field: "ctc", headerName: "CTC", width: 120 },
-    { field: "etc", headerName: "ETC", width: 120 },
-    { field: "rateClosed", headerName: "Rate Closed", width: 150 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <IconButton color="primary" onClick={() => handleFormVisibility(true) && setCurrentUser(params.row)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton color="secondary" onClick={() => handleDelete(params.row.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
+  const handleSkillChange = (index, field, value) => {
+    const updatedSkills = [...skills];
+    updatedSkills[index][field] = value;
+    setSkills(updatedSkills);
+  };
+
+  const handleAddSkill = () => {
+    setSkills([...skills, { skillName: "", experienceYears: "" }]);
+  };
+
+  const toggleSkillModal = () => {
+    setShowSkillModal(!showSkillModal);
+  };
+
+  const handleSaveSkills = () => {
+    const skillStackString = skills
+      .map((skill) => `${skill.skillName} (${skill.experienceYears} years)`)
+      .join(", ");
+    setFormData((prev) => ({
+      ...prev,
+      skillStack: skillStackString,
+    }));
+    toggleSkillModal();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Submitted:", formData);
+    console.log("Skill Stack:", skills);
+    alert("Form submitted successfully!");
+  };
 
   return (
-    <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-      {!isFormVisible ? (
-        <>
-          {/* DataGrid View */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Typography variant="h5" gutterBottom>
-              Users
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleFormVisibility(true)}
-            >
-              Add New
-            </Button>
-          </div>
-          <div style={{ height: 600, width: "100%" }}>
-            <DataGrid
-              rows={users}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[10, 20, 50]}
-              checkboxSelection
-              disableSelectionOnClick
-              getRowId={(row) => row.id ?? `${row.name}-${row.contactNumber}`}
+    <div className="container mt-5">
+      <h2 className="mb-4">Resource Tracking Form</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Client and Requirement */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Client</label>
+            <input
+              type="text"
+              className="form-control"
+              name="client"
+              value={formData.client}
+              onChange={handleInputChange}
             />
           </div>
-        </>
-      ) : (
-        <>
-          {/* Form View */}
-          <Typography variant="h6" gutterBottom>
-            {currentUser.id ? "Edit User" : "Add New User"}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Name"
-                name="name"
-                value={currentUser.name}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Contact Number"
-                name="contactNumber"
-                value={currentUser.contactNumber}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                value={currentUser.email}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                name="dob"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={currentUser.dob}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Select
-                fullWidth
-                name="gender"
-                value={currentUser.gender}
-                onChange={handleInputChange}
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="PAN"
-                name="pan"
-                value={currentUser.pan}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Aadhar"
-                name="aadhar"
-                value={currentUser.aadhar}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Education"
-                name="education"
-                value={currentUser.education}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Select
-                fullWidth
-                name="passport"
-                value={currentUser.passport}
-                onChange={handleInputChange}
-              >
-                <MenuItem value="Yes">Yes</MenuItem>
-                <MenuItem value="No">No</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Visa Type"
-                name="visaType"
-                value={currentUser.visaType}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Select
-                fullWidth
-                name="consultantType"
-                value={currentUser.consultantType}
-                onChange={handleInputChange}
-              >
-                <MenuItem value="Consultant">Consultant</MenuItem>
-                <MenuItem value="FTE">FTE</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="CTC"
-                name="ctc"
-                value={currentUser.ctc}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="ETC"
-                name="etc"
-                value={currentUser.etc}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Rate Closed"
-                name="rateClosed"
-                value={currentUser.rateClosed}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            {/* Upload Photo and PAN Buttons */}
-            <Grid item xs={12} sm={6}>
-              <Typography variant="body1" gutterBottom>
-                Upload Photo
-              </Typography>
-              <input
-                id="photo-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handlePhotoUpload}
-              />
-              <label htmlFor="photo-upload">
-                <Button variant="contained" component="span" color="primary">
-                  Choose File
-                </Button>
-              </label>
-              <input
-                id="pan-upload"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handlePanPhotoUpload}
-              />
-              <label htmlFor="pan-upload">
-                <Button variant="contained" component="span" color="secondary">
-                  Upload PAN
-                </Button>
-              </label>
-              {photoPreview && (
-                <img
-                  src={photoPreview}
-                  alt="Photo Preview"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    borderRadius: "50%",
-                    marginTop: "10px",
-                  }}
-                />
-              )}
-              {panPhotoPreview && (
-                <img
-                  src={panPhotoPreview}
-                  alt="PAN Photo Preview"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    marginTop: "10px",
-                  }}
-                />
-              )}
-            </Grid>
-          </Grid>
-          <div style={{ marginTop: 20 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-              sx={{ marginRight: 2 }}
-            >
-              {currentUser.id ? "Save Changes" : "Add User"}
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => handleFormVisibility(false)}
-            >
-              Cancel
-            </Button>
+          <div className="col-md-6">
+            <label className="form-label">Requirement</label>
+            <input
+              type="text"
+              className="form-control"
+              name="requirement"
+              value={formData.requirement}
+              onChange={handleInputChange}
+            />
           </div>
-        </>
+        </div>
+  
+        {/* Candidate Full Name and Shared Date & TA */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Candidate Full Name</label>
+            <input
+              type="text"
+              className="form-control"
+              name="candidateFullName"
+              value={formData.candidateFullName}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">Shared Date & TA</label>
+            <input
+              type="date"
+              className="form-control"
+              name="sharedDateTA"
+              value={formData.sharedDateTA}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+
+        {/* Status and Mode Dropdowns */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Status: FTE/Consultant/Freelancer</label>
+          <select
+            className="form-control"
+            name="status"
+            value={formData.status}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Status</option>
+            <option value="FTE">FTE</option>
+            <option value="Consultant">Consultant</option>
+            <option value="Freelancer">Freelancer</option>
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Mode: Current Location/Remote/Hybrid/WFO</label>
+          <select
+            className="form-control"
+            name="mode"
+            value={formData.mode}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Mode</option>
+            <option value="Current Location">Current Location</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="WFO">WFO</option>
+          </select>
+        </div>
+      </div>
+      {/* Education */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Education</label>
+          <input
+            type="text"
+            className="form-control"
+            name="education"
+            value={formData.education}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+
+      {/* Current Shift and Preferred Shifts */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Current Shift</label>
+          <input
+            type="text"
+            className="form-control"
+            name="currentShift"
+            value={formData.currentShift}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Preferred Shifts</label>
+          <input
+            type="text"
+            className="form-control"
+            name="preferredShifts"
+            value={formData.preferredShifts}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+
+      {/* Address */}
+      <div className="row mb-3">
+        <div className="col-md-12">
+          <label className="form-label">Address</label>
+          <textarea
+            className="form-control"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+            rows="3"
+          ></textarea>
+        </div>
+      </div>
+
+      {/* Passport/Visa */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Passport/Visa</label>
+          <input
+            type="text"
+            className="form-control"
+            name="passportVisa"
+            value={formData.passportVisa}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+
+      {/* Holding Offers, CTC, ETC */}
+      <div className="row mb-3">
+        <div className="col-md-4">
+          <label className="form-label">Holding Offers</label>
+          <input
+            type="text"
+            className="form-control"
+            name="holdingOffers"
+            value={formData.holdingOffers}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="col-md-4">
+          <label className="form-label">CTC</label>
+          <input
+            type="text"
+            className="form-control"
+            name="ctc"
+            value={formData.ctc}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="col-md-4">
+          <label className="form-label">ETC</label>
+          <input
+            type="text"
+            className="form-control"
+            name="etc"
+            value={formData.etc}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+
+
+      {/* Domain Exp and Status of Resource */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Domain Exp</label>
+          <select
+            className="form-control"
+            name="domainExp"
+            value={formData.domainExp}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Domain</option>
+            <option value="Banking">Banking</option>
+            <option value="E commerce">E commerce</option>
+            <option value="Pharma">Pharma</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Construction">Construction</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="IT">IT</option>
+          </select>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label">Status of Resource</label>
+          <select
+            className="form-control"
+            name="resourceStatus"
+            value={formData.resourceStatus}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Status</option>
+            <option value="L1 through">L1 through</option>
+            <option value="L2 through">L2 through</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Hold">Hold</option>
+            <option value="Selected">Selected</option>
+            <option value="Client Round">Client Round</option>
+            <option value="Onboarded">Onboarded</option>
+            <option value="Client round Pending">Client round Pending</option>
+            <option value="BGV Initiated">BGV Initiated</option>
+            <option value="Offer Shared">Offer Shared</option>
+            <option value="Docs Received">Docs Received</option>
+            <option value="BackedOut">BackedOut</option>
+            <option value="Rate shared">Rate shared</option>
+            <option value="Laptop allocated">Laptop allocated</option>
+          </select>
+        </div>
+      </div>
+
+      
+  
+       
+        {/* Total/Rel Exp and NP (Negotiable NP)/LWD */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Total/Rel Exp</label>
+            <input
+              type="text"
+              className="form-control"
+              name="totalRelExp"
+              value={formData.totalRelExp}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">NP (Negotiable NP)/LWD</label>
+            <input
+              type="text"
+              className="form-control"
+              name="npLwd"
+              value={formData.npLwd}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+  
+        {/* Contact Numbers */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Contact No.1</label>
+            <input
+              type="text"
+              className="form-control"
+              name="contactNumber1"
+              value={formData.contactNumber1}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">Contact No.2</label>
+            <input
+              type="text"
+              className="form-control"
+              name="contactNumber2"
+              value={formData.contactNumber2}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+  
+        {/* Emails and LinkedIn */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Email 1</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email1"
+              value={formData.email1}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">Email 2</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email2"
+              value={formData.email2}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Linked IN</label>
+            <input
+              type="url"
+              className="form-control"
+              name="linkedIn"
+              value={formData.linkedIn}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+  
+        {/* Skill Stack */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">
+              Skill Stack
+              <button
+                type="button"
+                className="btn btn-sm btn-primary ms-2"
+                onClick={toggleSkillModal}
+              >
+                Add Skills
+              </button>
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="skillStack"
+              value={formData.skillStack}
+              onChange={handleInputChange}
+              readOnly
+            />
+          </div>
+        </div>
+  
+        {/* Photograph, PAN, Aadhaar, Resume */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Photograph</label>
+            <input
+              type="file"
+              className="form-control"
+              name="photograph"
+              onChange={handleFileChange}
+            />
+            {photoPreview && (
+              <a
+                href={photoPreview}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="d-block mt-2"
+              >
+                View Uploaded Photograph
+              </a>
+            )}
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">PAN</label>
+            <input
+              type="file"
+              className="form-control"
+              name="panUpload"
+              onChange={handleFileChange}
+            />
+            {panPreview && (
+              <a
+                href={panPreview}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="d-block mt-2"
+              >
+                View Uploaded PAN
+              </a>
+            )}
+          </div>
+        </div>
+  
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Aadhaar</label>
+            <input
+              type="file"
+              className="form-control"
+              name="aadhaarUpload"
+              onChange={handleFileChange}
+            />
+            {aadhaarPreview && (
+              <a
+                href={aadhaarPreview}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="d-block mt-2"
+              >
+                View Uploaded Aadhaar
+              </a>
+            )}
+          </div>
+          <div className="col-md-6">
+            <label className="form-label">Resume Attachment</label>
+            <input
+              type="file"
+              className="form-control"
+              name="resumeAttachment"
+              onChange={handleFileChange}
+            />
+            {resumePreview && (
+              <a
+                href={resumePreview}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="d-block mt-2"
+              >
+                View Uploaded Resume
+              </a>
+            )}
+          </div>
+        </div>
+  
+        {/* Submit Button */}
+        <div className="d-flex justify-content-end">
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+  
+      {/* Skill Stack Modal */}
+      {showSkillModal && (
+        <div className="modal d-block" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Skill Stack Details</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={toggleSkillModal}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Skill Name</th>
+                      <th>Experience in Years</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {skills.map((skill, index) => (
+                      <tr key={index}>
+                        <td>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={skill.skillName}
+                            onChange={(e) =>
+                              handleSkillChange(index, "skillName", e.target.value)
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            className="form-control"
+                            value={skill.experienceYears}
+                            onChange={(e) =>
+                              handleSkillChange(index, "experienceYears", e.target.value)
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleAddSkill}
+                >
+                  Add New
+                </button>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleSaveSkills}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={toggleSkillModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-    </Paper>
+    </div>
   );
 };
 
-export default Users;
+export default ResourceTrackingForm;

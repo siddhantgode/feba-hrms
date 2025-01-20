@@ -3,51 +3,50 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid"; // For grid layout
+import Grid from "@mui/material/Grid";
 import { DataGrid } from "@mui/x-data-grid";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import axios from "axios";
+import '../index.css'; // Importing the global styles
 
 function Dashboard() {
-  const [totalCompanies, setTotalCompanies] = useState(null); // Total companies from crudForm.json
-  const [statusCounts, setStatusCounts] = useState({}); // Counts of values by status from the data table
-  const [tableData, setTableData] = useState([]); // Original table data
-  const [filteredData, setFilteredData] = useState([]); // Filtered data for the table
-  const [statusOptions, setStatusOptions] = useState([]); // Unique status values for the dropdown slicer
-  const [companyOptions, setCompanyOptions] = useState([]); // Unique company values for the company slicer
-  const [selectedStatuses, setSelectedStatuses] = useState([]); // Selected statuses for filtering
-  const [selectedCompanies, setSelectedCompanies] = useState([]); // Selected companies for filtering
-  const [error, setError] = useState(null); // Error for first API call
-  const [error2, setError2] = useState(null); // Error for second API call
+  const [totalCompanies, setTotalCompanies] = useState(null);
+  const [statusCounts, setStatusCounts] = useState({});
+  const [tableData, setTableData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [companyOptions, setCompanyOptions] = useState([]);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [error, setError] = useState(null);
+  const [error2, setError2] = useState(null);
 
-  const API_URL1 = "http://localhost:5000/api/crudForm"; // Endpoint for crudForm.json
-  const API_URL2 = "http://localhost:5000/api/crud2Form"; // Endpoint for crud2Form.json
+  const API_URL1 = "http://localhost:5000/api/crudForm";
+  const API_URL2 = "http://localhost:5000/api/crud2Form";
 
   useEffect(() => {
-    // Fetch data for the first card (crudForm.json)
     const fetchCompanies = async () => {
       try {
         const response = await axios.get(API_URL1);
         if (Array.isArray(response.data)) {
-          setTotalCompanies(response.data.length); // Set the count of companies
+          setTotalCompanies(response.data.length);
         } else {
           throw new Error("Invalid data format: API should return an array.");
         }
       } catch (err) {
         console.error(err);
-        setError(err.message); // Capture and display error
+        setError(err.message);
       }
     };
 
-    // Fetch data for the table (crud2Form.json)
     const fetchTableData = async () => {
       try {
         const response = await axios.get(API_URL2);
         if (Array.isArray(response.data)) {
           const formattedData = response.data.map((item, index) => ({
-            id: index + 1, // Add unique ID for DataGrid rows
+            id: index + 1,
             company: item.company || "N/A",
             user: item.user || "N/A",
             date: item.date || "N/A",
@@ -55,15 +54,13 @@ function Dashboard() {
             updates: item.updates || "N/A",
           }));
           setTableData(formattedData);
-          setFilteredData(formattedData); // Initially, filtered data is the same as original data
+          setFilteredData(formattedData);
 
-          // Extract unique statuses and companies for the dropdown slicers
           const uniqueStatuses = [...new Set(formattedData.map((row) => row.status))];
           const uniqueCompanies = [...new Set(formattedData.map((row) => row.company))];
           setStatusOptions(uniqueStatuses);
           setCompanyOptions(uniqueCompanies);
 
-          // Calculate status counts
           const counts = formattedData.reduce((acc, row) => {
             acc[row.status] = (acc[row.status] || 0) + 1;
             return acc;
@@ -74,27 +71,24 @@ function Dashboard() {
         }
       } catch (err) {
         console.error(err);
-        setError2(err.message); // Capture and display error for the second API call
+        setError2(err.message);
       }
     };
 
-    fetchCompanies(); // Fetch data for the first card
-    fetchTableData(); // Fetch data for the table
+    fetchCompanies();
+    fetchTableData();
   }, []);
 
-  // Handle filtering when status slicer changes
   const handleStatusFilterChange = (event, values) => {
-    setSelectedStatuses(values); // Update selected statuses
-    filterTable(values, selectedCompanies); // Update table based on both slicers
+    setSelectedStatuses(values);
+    filterTable(values, selectedCompanies);
   };
 
-  // Handle filtering when company slicer changes
   const handleCompanyFilterChange = (event, values) => {
-    setSelectedCompanies(values); // Update selected companies
-    filterTable(selectedStatuses, values); // Update table based on both slicers
+    setSelectedCompanies(values);
+    filterTable(selectedStatuses, values);
   };
 
-  // Function to filter table based on selected statuses and companies
   const filterTable = (statuses, companies) => {
     let filtered = tableData;
 
@@ -109,42 +103,33 @@ function Dashboard() {
     setFilteredData(filtered);
   };
 
-  // Custom cell rendering for the Status column with conditional formatting
   const renderStatusCell = (params) => {
     const status = params.value;
-    let color = "black"; // Default color
-    if (status === "Pending") color = "red";
-    else if (status === "In Progress") color = "orange";
-    else if (status === "Completed") color = "green";
+    let cellStyle = {};
 
-    return <span style={{ color, fontWeight: "bold" }}>{status}</span>;
+    if (status === "Pending") {
+      cellStyle = { backgroundColor: 'red', color: 'white' };
+    } else if (status === "In Progress") {
+      cellStyle = { backgroundColor: 'orange', color: 'white' };
+    } else if (status === "Completed") {
+      cellStyle = { backgroundColor: 'green', color: 'white' };
+    }
+
+    return (
+      <div style={cellStyle} className="status-cell">
+        {status}
+      </div>
+    );
   };
 
   return (
-    <Paper
-      sx={{
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      {/* Welcome message */}
+    <Paper sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
       <Typography variant="h5" gutterBottom>
         Welcome to the Dashboard!
       </Typography>
 
-      {/* Data Cards */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          gap: 2,
-          mb: 2,
-        }}
-      >
-        {/* Total Companies Card */}
-        <Card sx={{ width: 200, height: 100 }}> {/* Reduced size */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
+        <Card sx={{ width: 200, height: 100 }}>
           <CardContent>
             <Typography variant="h6" align="center">
               Total Companies
@@ -163,11 +148,10 @@ function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Status Counts Card */}
-        <Card sx={{ width: 300, height: 100 }}> {/* Another card */}
+        <Card sx={{ width: 300, height: 100 }}>
           <CardContent>
             <Typography variant="h6" align="center">
-              Status Counts
+              Status
             </Typography>
             {error2 ? (
               <Typography color="error" align="center">
@@ -189,82 +173,57 @@ function Dashboard() {
         </Card>
       </Box>
 
-      {/* Dropdown Slicers for Filtering */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          gap: 2,
-          mb: 2,
-        }}
-      >
-        {/* Company Slicer */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
         <Autocomplete
           multiple
-          options={companyOptions} // Company options for the dropdown
-          value={selectedCompanies} // Currently selected companies
-          onChange={handleCompanyFilterChange} // Handle selection changes
+          options={companyOptions}
+          value={selectedCompanies}
+          onChange={handleCompanyFilterChange}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Filter by Company"
-              placeholder="Select Company"
-            />
+            <TextField {...params} variant="outlined" label="Filter by Company" placeholder="Select Company" />
           )}
-          sx={{
-            width: 300, // Width of the slicer
-          }}
+          sx={{ width:200}}
         />
 
-        {/* Status Slicer */}
         <Autocomplete
           multiple
-          options={statusOptions} // Status options for the dropdown
-          value={selectedStatuses} // Currently selected statuses
-          onChange={handleStatusFilterChange} // Handle selection changes
+          options={statusOptions}
+          value={selectedStatuses}
+          onChange={handleStatusFilterChange}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Filter by Status"
-              placeholder="Select Status"
-            />
+            <TextField {...params} variant="outlined" label="Filter by Status" placeholder="Select Status" />
           )}
-          sx={{
-            width: 300, // Width of the slicer
-          }}
+          sx={{ width: 300 }}
         />
       </Box>
 
-      {/* Data Table for CRUD2 Form Data */}
       <Typography variant="h6" gutterBottom>
-        CRUD2 Form Data
+        CURRENT ENGAGEMENTS
       </Typography>
       {error2 ? (
         <Typography color="error">{error2}</Typography>
       ) : (
-        <div style={{ height: 600, width: "100%" }}>
+        <div style={{ height: 600, width: "100%" }} className="data-grid-container">
           <DataGrid
-            rows={filteredData} // Use the filtered data for the table
+            rows={filteredData}
             columns={[
-              { field: "company", headerName: "Company", flex: 1, sortable: true },
-              { field: "user", headerName: "User", flex: 1, sortable: true },
-              { field: "date", headerName: "Date", flex: 1, sortable: true },
+              { field: "company", headerName: "Company", flex: 1, sortable: true, headerClassName: 'data-grid-header' },
+              { field: "user", headerName: "User", flex: 1, sortable: true, headerClassName: 'data-grid-header' },
+              { field: "date", headerName: "Date", flex: 1, sortable: true, headerClassName: 'data-grid-header' },
               {
                 field: "status",
                 headerName: "Status",
                 flex: 1,
-                renderCell: renderStatusCell, // Conditional formatting for status
+                renderCell: renderStatusCell,
                 sortable: true,
+                headerClassName: 'data-grid-header'
               },
-              { field: "updates", headerName: "Updates", flex: 2, sortable: true },
+              { field: "updates", headerName: "Updates", flex: 2, sortable: true, headerClassName: 'data-grid-header' },
             ]}
-            pageSize={10} // Number of rows per page
-            rowsPerPageOptions={[5, 10, 20]} // Pagination options
-            checkboxSelection // Enable row selection with checkboxes
+            pageSize={10}
+            rowsPerPageOptions={[5, 10, 20]}
             disableSelectionOnClick
-            sortingOrder={["asc", "desc"]} // Enable ascending and descending sorting
+            sortingOrder={["asc", "desc"]}
           />
         </div>
       )}

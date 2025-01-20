@@ -11,3 +11,47 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Sticky style for cells */
+.sticky-column {
+  position: sticky;
+  right: 0; /* Anchors the column to the right */
+  z-index: 1; /* Ensures it stays on top of other content */
+  background-color: white; /* Prevents overlap with the table rows */
+}
+
+/* Sticky style for the header */
+.sticky-column-header {
+  position: sticky;
+  right: 0; /* Aligns the header with the sticky column */
+  z-index: 2; /* Higher z-index than the cells for visibility */
+  background-color: white; /* Matches the header background */
+  border-left: 1px solid #e0e0e0; /* Optional: Add a border for distinction */
+}
+
+.data-grid-header {
+  background-color: #1976d2; /* Blue background */
+  color: white; /* White text color */
+  font-weight: bold; /* Bold text for better visibility */
+}
+
+/* YourComponent.module.css */
+.dataGridContainer {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.dataGridHeader {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
+
+.statusPending {
+  color: red;
+  font-weight: bold;
+}
+
+/* Other status styles... */
