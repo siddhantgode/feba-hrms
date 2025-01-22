@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import db from "../firebase"; 
 import {
   Paper,
   Typography,
@@ -43,17 +52,24 @@ const Companies = () => {
   const [companyToDelete, setCompanyToDelete] = useState(null);
   const [isListView, setIsListView] = useState(true);
 
-  const API_URL = "http://localhost:5000/api/companies";
+  // Firestore Collection Reference
+  const companiesCollectionRef = collection(db, "companies");
 
-  // Fetch Data from Backend
+  // Fetch Data from Firestore
   useEffect(() => {
     fetchCompanies();
   }, []);
 
   const fetchCompanies = async () => {
     try {
-      const response = await axios.get(API_URL);
-      setCompanies(response.data);
+      console.log("Fetching companies from Firestore...");
+      const querySnapshot = await getDocs(companiesCollectionRef);
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id, // Firestore document ID
+        ...doc.data(), // Document data
+      }));
+      console.log("Fetched companies:", data);
+      setCompanies(data);
     } catch (error) {
       console.error("Error fetching companies:", error);
     }
@@ -83,15 +99,23 @@ const Companies = () => {
   // Add or Edit Company
   const handleSubmit = async () => {
     try {
+      console.log("Current company data:", currentCompany);
+  
       if (currentCompany.id) {
-        const response = await axios.put(`${API_URL}/${currentCompany.id}`, currentCompany);
+        // Update existing company
+        const companyDocRef = doc(db, "companies", currentCompany.id);
+        await updateDoc(companyDocRef, currentCompany);
+        console.log("Company updated successfully:", currentCompany);
         setCompanies((prev) =>
-          prev.map((comp) => (comp.id === currentCompany.id ? response.data : comp))
+          prev.map((comp) => (comp.id === currentCompany.id ? currentCompany : comp))
         );
       } else {
-        const response = await axios.post(API_URL, currentCompany);
-        setCompanies((prev) => [...prev, response.data]);
+        // Add new company
+        const docRef = await addDoc(collection(db, "companies"), currentCompany);
+        console.log("Company added successfully with ID:", docRef.id);
+        setCompanies((prev) => [...prev, { id: docRef.id, ...currentCompany }]);
       }
+  
       handleClose();
     } catch (error) {
       console.error("Error saving company:", error);
@@ -101,7 +125,8 @@ const Companies = () => {
   // Delete a Company
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_URL}/${companyToDelete.id}`);
+      const companyDocRef = doc(db, "companies", companyToDelete.id);
+      await deleteDoc(companyDocRef);
       setCompanies((prev) => prev.filter((comp) => comp.id !== companyToDelete.id));
       handleDeleteDialogClose();
     } catch (error) {
@@ -150,7 +175,7 @@ const Companies = () => {
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Company Name</TableCell>
+                <TableCell>Company Namee</TableCell>
                 <TableCell>Location</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Contact Person</TableCell>

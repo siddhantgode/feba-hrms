@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import db from '../firebase';
+import { collection, addDoc } from "firebase/firestore";
 const Openings = () => {
   const [openingData, setOpeningData] = useState({
     company: "",
@@ -77,56 +78,59 @@ const Openings = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
   
     try {
-      const response = await fetch("http://localhost:5000/api/openings", { // Updated endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(openingData),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to save data");
-      }
-  
-      const result = await response.json();
-      console.log("Response from server:", result);
-  
-      // Reset the form fields
-      setOpeningData({
-        company: "",
-        designation: "",
-        reqReceivedDate: "",
-        profileSharedDate: "",
-        jd: "",
-        mandatorySkillSet: "",
-        shiftTimings: "",
-        contractFTE: "",
-        duration: "",
-        budget: "",
-        numberOfPositions: "",
-        endClientDetails: "",
-        lineupProfiles: "",
-        profileStatus: "",
-        workType: "",
-        progressStatus: "",
-        bgv: "",
-        l1Questions: "",
-        l2Questions: "",
-        totalRelExp: "",
-        note: "",
-        jdAttachment: null,
-        laptopProvided: "",
-        noOfTechnicalRounds: "",
+      // Save data to Firestore (in a collection called "openings")
+      await addDoc(collection(db, "openings"), {
+        company: openingData.company,
+        designation: openingData.designation,
+        reqReceivedDate: openingData.reqReceivedDate,
+        profileSharedDate: openingData.profileSharedDate,
+        jd: openingData.jd,
+        mandatorySkillSet: openingData.mandatorySkillSet,
+        shiftTimings: openingData.shiftTimings,
+        contractFTE: openingData.contractFTE,
+        duration: openingData.duration,
+        budget: openingData.budget,
+        numberOfPositions: openingData.numberOfPositions,
+        endClientDetails: openingData.endClientDetails,
+        lineupProfiles: openingData.lineupProfiles,
+        profileStatus: openingData.profileStatus,
+        workType: openingData.workType,
+        progressStatus: openingData.progressStatus,
+        bgv: openingData.bgv,
+        l1Questions: openingData.l1Questions,
+        l2Questions: openingData.l2Questions,
+        totalRelExp: openingData.totalRelExp,
+        note: openingData.note,
+        jdAttachment: openingData.jdAttachment
+          ? openingData.jdAttachment.name
+          : null, // Save only the file name (not the actual file)
+        laptopProvided: openingData.laptopProvided,
+        noOfTechnicalRounds: openingData.noOfTechnicalRounds,
+        timestamp: new Date(), // Add a timestamp for when the entry was created
       });
   
       alert("Form submitted successfully!");
+  
+      // Reset the form fields
+      handleClear();
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error saving data to Firebase:", error);
       alert("Failed to submit the form");
+    }
+  };
+
+  const addTestData = async () => {
+    try {
+      await addDoc(collection(db, "testCollection"), {
+        message: "Hello, new Firebase database!",
+      });
+      alert("Data added to the new database successfully!");
+    } catch (error) {
+      console.error("Error adding data to Firestore:", error);
+      alert("Failed to add data to the new database.");
     }
   };
   
@@ -139,7 +143,8 @@ const Openings = () => {
       borderRadius: "0px",
     }}>
       <h2 className="mb-4">New Requirement</h2>
-
+  {/* Add Test Data Button */}
+ 
       
       <form onSubmit={handleSubmit}>
         {/* Form Elements in 3 Columns */}

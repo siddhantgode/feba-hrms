@@ -6,13 +6,17 @@ import Users from "./components/Users";
 import Companies from "./components/Companies";
 import MainLayout from "./components/MainLayout"; // Ensure correct import
 import Engagements from "./components/Engagements";
+import Engagement2 from "./components/Engagements2";
 import CrudForm from "./components/CrudForm"; // Ensure correct import
 import CRUD2Form from "./components/CRUD2form"; // Import the new CRUD2Form component
 import Chart from "./components/Chart";
 import Openings from "./components/Openings";
 import CompanyCountChart from "./charts";
 import ChartPage from "./ChartPage";
+import CompaniesList from "./components/crudform3";
+import KanbanView from "./components/KanbanView";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
@@ -25,10 +29,12 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="chart" element={<CompanyCountChart />} />
+          <Route path="crud3" element={<CompaniesList />} />
           <Route path="chart1" element={<ChartPage />} />
           <Route path="users" element={<Users />} />
-          <Route path="companies" element={<Companies />} />
-          <Route path="engagements" element={<Engagements />} />
+          <Route path="kanban" element={<KanbanView />} />
+          <Route path="companies" element={<CompaniesList />} />
+          <Route path="engagements" element={<Engagement2 />} />
           <Route path="openings" element={<Openings />} />
           <Route path="crud-form" element={<CrudForm />} />
           <Route path="crud2-form" element={<CRUD2Form />} /> {/* Updated route for CRUD2Form */}

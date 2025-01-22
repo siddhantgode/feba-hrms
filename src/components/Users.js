@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { collection, addDoc } from "firebase/firestore";
+import db from "../firebase"; 
 
 const ResourceTrackingForm = () => {
   const [formData, setFormData] = useState({
@@ -129,21 +131,32 @@ const ResourceTrackingForm = () => {
     toggleSkillModal();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send form data to the backend API
-    axios
-      .post("http://localhost:5000/api/users", formData) // Endpoint for adding users
-      .then((response) => {
-        console.log("Form submitted successfully:", response.data);
-        alert("Form submitted successfully!");
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-        alert("An error occurred while submitting the form.");
+    try {
+      // Save form data to Firestore
+      await addDoc(collection(db, "resources"), {
+        ...formData,
+        resumeAttachment: formData.resumeAttachment
+          ? formData.resumeAttachment.name
+          : null, // Save only file name
+        photograph: formData.photograph ? formData.photograph.name : null,
+        panUpload: formData.panUpload ? formData.panUpload.name : null,
+        aadhaarUpload: formData.aadhaarUpload
+          ? formData.aadhaarUpload.name
+          : null,
+        timestamp: new Date(), // Add a timestamp for tracking
       });
+
+      alert("Form submitted successfully!");
+      handleClear(); // Clear the form
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to submit the form. Please try again.");
+    }
   };
+
 
   return (
     <div className="container mt-5">

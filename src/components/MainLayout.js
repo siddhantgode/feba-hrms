@@ -59,13 +59,13 @@ function MainLayout() {
               </ListItemIcon>
               <ListItemText primary="Resources" />
             </ListItem>
-            <ListItem button component={Link} to="/crud-form">
+            <ListItem button component={Link} to="/companies">
               <ListItemIcon>
                 <AddBoxIcon />
               </ListItemIcon>
               <ListItemText primary="Companies" />
             </ListItem>
-            <ListItem button component={Link} to="/crud2-form">
+            <ListItem button component={Link} to="/engagements">
               <ListItemIcon>
                 <HandshakeIcon />
               </ListItemIcon>

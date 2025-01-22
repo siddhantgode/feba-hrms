@@ -37,3 +37,8 @@
   }
 }
 
+
+.content-container {
+  margin-top: 120px; /* Adjust this value to match the height of your navbar */
+  padding: 20px; /* Optional: Add padding for better spacing */
+}
