@@ -242,5 +242,32 @@
     "laptopProvided": "",
     "noOfTechnicalRounds": "1",
     "laptop": "Yes"
+  },
+  {
+    "id": 1737512999256,
+    "company": "Feba Tech",
+    "designation": "Asst",
+    "reqReceivedDate": "2025-01-16",
+    "profileSharedDate": "2025-01-08",
+    "jd": "",
+    "mandatorySkillSet": "",
+    "shiftTimings": "",
+    "contractFTE": "",
+    "duration": "",
+    "budget": "",
+    "numberOfPositions": "",
+    "endClientDetails": "",
+    "lineupProfiles": "",
+    "profileStatus": "",
+    "workType": "",
+    "progressStatus": "",
+    "bgv": "",
+    "l1Questions": "",
+    "l2Questions": "",
+    "totalRelExp": "",
+    "note": "",
+    "jdAttachment": null,
+    "laptopProvided": "",
+    "noOfTechnicalRounds": ""
   }
 ]

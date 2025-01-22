@@ -1,169 +1,13 @@
-import React, { useState } from "react";
-import axios from "axios";
-
-const ResourceTrackingForm = () => {
-  const [formData, setFormData] = useState({
-    client: "",
-    requirement: "",
-    candidateFullName: "",
-    sharedDateTA: "",
-    totalRelExp: "",
-    npLwd: "",
-    contactNumber1: "",
-    contactNumber2: "",
-    email1: "",
-    email2: "",
-    linkedIn: "",
-    resumeAttachment: null,
-    photograph: null,
-    panUpload: null,
-    aadhaarUpload: null,
-    consultantType: "",
-    skillStack: "",
-    currentLocation: "",
-    preferredLocation: "",
-    education: "",
-    currentShift: "",
-    preferredShifts: "",
-    address: "",
-    passportVisa: "",
-    holdingOffers: "",
-    ctc: "",
-    inhand: "",
-    etc: "",
-    rateClosed: "",
-    consultant: "",
-    domainExp: "",
-    resourceStatus: "",
-    bgv: "",
-    pan: "",
-    adhaar: "",
-    nearestClientOffice: "",
-    currentCompany: "",
-  });
-
-  const handleClear = () => {
-    setFormData({
-      client: "",
-      requirement: "",
-      candidateFullName: "",
-      sharedDateTA: "",
-      status: "",
-      mode: "",
-      education: "",
-      currentShift: "",
-      preferredShifts: "",
-      address: "",
-      passportVisa: "",
-      holdingOffers: "",
-      ctc: "",
-      etc: "",
-      domainExp: "",
-      resourceStatus: "",
-      contactNumber1: "",
-      contactNumber2: "",
-      email1: "",
-      email2: "",
-      linkedIn: "",
-      skillStack: "",
-      photograph: null,
-      panUpload: null,
-      aadhaarUpload: null,
-      resumeAttachment: null,
-    });
-  };
-
-  const [resumePreview, setResumePreview] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
-  const [panPreview, setPanPreview] = useState(null);
-  const [aadhaarPreview, setAadhaarPreview] = useState(null);
-  const [skills, setSkills] = useState([{ skillName: "", experienceYears: "" }]);
-  const [showSkillModal, setShowSkillModal] = useState(false);
-
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Handle file upload
-  const handleFileChange = (e) => {
-    const { name } = e.target;
-    const file = e.target.files[0];
-    setFormData((prev) => ({
-      ...prev,
-      [name]: file,
-    }));
-
-    if (name === "resumeAttachment") setResumePreview(URL.createObjectURL(file));
-    if (name === "photograph") setPhotoPreview(URL.createObjectURL(file));
-    if (name === "panUpload") setPanPreview(URL.createObjectURL(file));
-    if (name === "aadhaarUpload") setAadhaarPreview(URL.createObjectURL(file));
-  };
-
-  const handleSkillChange = (index, field, value) => {
-    const updatedSkills = [...skills];
-    updatedSkills[index][field] = value;
-    setSkills(updatedSkills);
-  };
-
-  const handleAddSkill = () => {
-    setSkills([...skills, { skillName: "", experienceYears: "" }]);
-  };
-
-  const toggleSkillModal = () => {
-    setShowSkillModal(!showSkillModal);
-  };
-
-  const handleSaveSkills = () => {
-    const skillStackString = skills
-      .map((skill) => `${skill.skillName} (${skill.experienceYears} years)`)
-      .join(", ");
-    setFormData((prev) => ({
-      ...prev,
-      skillStack: skillStackString,
-    }));
-    toggleSkillModal();
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Send form data to the backend API
-    axios
-      .post("http://localhost:5000/api/users", formData) // Endpoint for adding users
-      .then((response) => {
-        console.log("Form submitted successfully:", response.data);
-        alert("Form submitted successfully!");
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-        alert("An error occurred while submitting the form.");
-      });
-  };
-
-  return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Resource Tracking Form</h2>
-      <div
-  
->
 <form onSubmit={handleSubmit}>
-      {/* Scrollable Form Fields */}
-      <div
+        {/* Client and Requirement */}
+        <div className="row mb-3"
         style={{
-          minHeight: "500px",
           maxHeight: "500px",
           overflowY: "scroll",
           paddingRight: "15px",
-          padding: "15px",
-        }}
-      >
-        <div className="row mb-3">
-          <div className="col-md-4">
+          borderRadius: "0px",
+        }}>
+          <div className="col-md-6">
             <label className="form-label">Client</label>
             <input
               type="text"
@@ -173,7 +17,7 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-6">
             <label className="form-label">Requirement</label>
             <input
               type="text"
@@ -183,7 +27,21 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+        </div>
+  
+        {/* Candidate Full Name and Shared Date & TA */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Candidate Full Name</label>
+            <input
+              type="text"
+              className="form-control"
+              name="candidateFullName"
+              value={formData.candidateFullName}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="col-md-6">
             <label className="form-label">Shared Date & TA</label>
             <input
               type="date"
@@ -195,19 +53,10 @@ const ResourceTrackingForm = () => {
           </div>
         </div>
 
-        <div className="row mb-3">
-          <div className="col-md-4">
-            <label className="form-label">Candidate Full Name</label>
-            <input
-              type="text"
-              className="form-control"
-              name="candidateFullName"
-              value={formData.candidateFullName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="col-md-4">
-          <label className="form-label">Work Status</label>
+        {/* Status and Mode Dropdowns */}
+      <div className="row mb-3">
+        <div className="col-md-6">
+          <label className="form-label">Status: FTE/Consultant/Freelancer</label>
           <select
             className="form-control"
             name="status"
@@ -220,8 +69,8 @@ const ResourceTrackingForm = () => {
             <option value="Freelancer">Freelancer</option>
           </select>
         </div>
-        <div className="col-md-4">
-          <label className="form-label">Work Mode</label>
+        <div className="col-md-6">
+          <label className="form-label">Mode: Current Location/Remote/Hybrid/WFO</label>
           <select
             className="form-control"
             name="mode"
@@ -235,10 +84,10 @@ const ResourceTrackingForm = () => {
             <option value="WFO">WFO</option>
           </select>
         </div>
-          
-        </div>
-        <div className="row mb-3">
-        <div className="col-md-4">
+      </div>
+      {/* Education */}
+      <div className="row mb-3">
+        <div className="col-md-6">
           <label className="form-label">Education</label>
           <input
             type="text"
@@ -248,7 +97,11 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="col-md-4">
+      </div>
+
+      {/* Current Shift and Preferred Shifts */}
+      <div className="row mb-3">
+        <div className="col-md-6">
           <label className="form-label">Current Shift</label>
           <input
             type="text"
@@ -258,7 +111,7 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Preferred Shifts</label>
           <input
             type="text"
@@ -268,11 +121,11 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
-          
-        </div>
+      </div>
 
-        <div className="row mb-3">
-        <div className="col-md-4">
+      {/* Address */}
+      <div className="row mb-3">
+        <div className="col-md-12">
           <label className="form-label">Address</label>
           <textarea
             className="form-control"
@@ -282,7 +135,11 @@ const ResourceTrackingForm = () => {
             rows="3"
           ></textarea>
         </div>
-        <div className="col-md-4">
+      </div>
+
+      {/* Passport/Visa */}
+      <div className="row mb-3">
+        <div className="col-md-6">
           <label className="form-label">Passport/Visa</label>
           <input
             type="text"
@@ -292,6 +149,10 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
+      </div>
+
+      {/* Holding Offers, CTC, ETC */}
+      <div className="row mb-3">
         <div className="col-md-4">
           <label className="form-label">Holding Offers</label>
           <input
@@ -302,10 +163,7 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
-      </div>
-
-      <div className="row mb-3">
-      <div className="col-md-4">
+        <div className="col-md-4">
           <label className="form-label">CTC</label>
           <input
             type="text"
@@ -325,7 +183,12 @@ const ResourceTrackingForm = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="col-md-4">
+      </div>
+
+
+      {/* Domain Exp and Status of Resource */}
+      <div className="row mb-3">
+        <div className="col-md-6">
           <label className="form-label">Domain Exp</label>
           <select
             className="form-control"
@@ -344,10 +207,7 @@ const ResourceTrackingForm = () => {
             <option value="IT">IT</option>
           </select>
         </div>
-      </div>
-
-      <div className="row mb-3">
-      <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Status of Resource</label>
           <select
             className="form-control"
@@ -372,7 +232,14 @@ const ResourceTrackingForm = () => {
             <option value="Laptop allocated">Laptop allocated</option>
           </select>
         </div>
-        <div className="col-md-4">
+      </div>
+
+      
+  
+       
+        {/* Total/Rel Exp and NP (Negotiable NP)/LWD */}
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Total/Rel Exp</label>
             <input
               type="text"
@@ -382,7 +249,7 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-6">
             <label className="form-label">NP (Negotiable NP)/LWD</label>
             <input
               type="text"
@@ -392,10 +259,11 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-      </div>
-
-      <div className="row mb-3">
-      <div className="col-md-4">
+        </div>
+  
+        {/* Contact Numbers */}
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Contact No.1</label>
             <input
               type="text"
@@ -405,7 +273,7 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-6">
             <label className="form-label">Contact No.2</label>
             <input
               type="text"
@@ -415,7 +283,11 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+        </div>
+  
+        {/* Emails and LinkedIn */}
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Email 1</label>
             <input
               type="email"
@@ -425,9 +297,7 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-      </div>
-      <div className="row mb-3">
-      <div className="col-md-4">
+          <div className="col-md-6">
             <label className="form-label">Email 2</label>
             <input
               type="email"
@@ -437,7 +307,9 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+        </div>
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Linked IN</label>
             <input
               type="url"
@@ -447,7 +319,11 @@ const ResourceTrackingForm = () => {
               onChange={handleInputChange}
             />
           </div>
-          <div className="col-md-4">
+        </div>
+  
+        {/* Skill Stack */}
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">
               Skill Stack
               <button
@@ -467,10 +343,11 @@ const ResourceTrackingForm = () => {
               readOnly
             />
           </div>
-      </div>
-
-      <div className="row mb-3">
-      <div className="col-md-6">
+        </div>
+  
+        {/* Photograph, PAN, Aadhaar, Resume */}
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Photograph</label>
             <input
               type="file"
@@ -489,7 +366,7 @@ const ResourceTrackingForm = () => {
               </a>
             )}
           </div>
-      <div className="col-md-6">
+          <div className="col-md-6">
             <label className="form-label">PAN</label>
             <input
               type="file"
@@ -508,10 +385,10 @@ const ResourceTrackingForm = () => {
               </a>
             )}
           </div>
-          
-      </div>
-      <div className="row mb-3">
-      <div className="col-md-6">
+        </div>
+  
+        <div className="row mb-3">
+          <div className="col-md-6">
             <label className="form-label">Aadhaar</label>
             <input
               type="file"
@@ -549,103 +426,12 @@ const ResourceTrackingForm = () => {
               </a>
             )}
           </div>
-          
-      </div>
-
-
-
-        {/* Add more form fields here as needed */}
-      </div>
-
-      <div className="d-flex justify-content-end gap-2 mt-3">
-        <button type="button" className="btn btn-secondary" onClick={handleClear}>
-          Clear
-        </button>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
-      </div>
-    </form>
-</div>
-  
-      {/* Skill Stack Modal */}
-      {showSkillModal && (
-        <div className="modal d-block" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Skill Stack Details</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={toggleSkillModal}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Skill Name</th>
-                      <th>Experience in Years</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {skills.map((skill, index) => (
-                      <tr key={index}>
-                        <td>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={skill.skillName}
-                            onChange={(e) =>
-                              handleSkillChange(index, "skillName", e.target.value)
-                            }
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            className="form-control"
-                            value={skill.experienceYears}
-                            onChange={(e) =>
-                              handleSkillChange(index, "experienceYears", e.target.value)
-                            }
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleAddSkill}
-                >
-                  Add New
-                </button>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={handleSaveSkills}
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={toggleSkillModal}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-      )}
-    </div>
-  );
-};
-
-export default ResourceTrackingForm;
+  
+        {/* Submit Button */}
+        <div className="d-flex justify-content-end">
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>

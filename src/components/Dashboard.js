@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import axios from "axios";
 import '../index.css'; // Importing the global styles
+import CompanyCountChart from "../charts";
 
 function Dashboard() {
   const [totalCompanies, setTotalCompanies] = useState(null);
@@ -128,7 +129,17 @@ function Dashboard() {
         Welcome to the Dashboard!
       </Typography>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
+      <div className="row mb-3">
+      <div className="col-md-6">
+      <div className="container mt-5">
+      <h2 className="mb-4 text-center">Company Count Chart</h2>
+      <div className="d-flex justify-content-center">
+        <CompanyCountChart />
+      </div>
+    </div>
+          </div>
+          <div className="col-md-6">
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
         <Card sx={{ width: 200, height: 100 }}>
           <CardContent>
             <Typography variant="h6" align="center">
@@ -172,7 +183,6 @@ function Dashboard() {
           </CardContent>
         </Card>
       </Box>
-
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mb: 2 }}>
         <Autocomplete
           multiple
@@ -196,6 +206,13 @@ function Dashboard() {
           sx={{ width: 300 }}
         />
       </Box>
+          </div>
+          
+      </div>
+
+      
+
+     
 
       <Typography variant="h6" gutterBottom>
         CURRENT ENGAGEMENTS

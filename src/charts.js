@@ -8,7 +8,7 @@ const CompanyCountChart = () => {
     const fetchData = async () => {
       try {
         // Fetch JSON data from the server
-        const response = await fetch('http://localhost:5000/api/openings'); // Adjust based on server URL
+        const response = await fetch('http://localhost:5000/api/engagements'); // Adjust based on server URL
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -42,10 +42,9 @@ const CompanyCountChart = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', maxWidth: '800px', margin: 'auto', padding: '20px' }}>
-      <h2 className="text-center mb-4">Company Count Chart</h2>
+    <div style={{ width: '100%', maxWidth: '800px', margin: 'auto', padding: '10px' }}>
       {data.length > 0 ? (
-        <BarChart width={730} height={250} data={data}>
+        <BarChart width={530} height={200} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
