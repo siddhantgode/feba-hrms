@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection,onSnapshot, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import db from "../firebase"; // Your Firebase config
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
@@ -49,6 +49,28 @@ function Engagement2() {
       setLoading(false);
     }
   };
+
+   // Real-time listener for Firestore collection
+   useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "engagement"),
+      (snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setEngagements(data);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching Firestore data:", error);
+        setError("Failed to load data.");
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe(); // Cleanup listener on unmount
+  }, []);
 
   useEffect(() => {
     fetchEngagements();

@@ -8,6 +8,7 @@
     "@mui/icons-material": "^6.2.0",
     "@mui/lab": "^6.0.0-beta.20",
     "@mui/material": "^6.2.1",
+    "@mui/styles": "^6.4.1",
     "@mui/x-charts": "^7.23.2",
     "@mui/x-data-grid": "^7.23.3",
     "@mui/x-date-pickers": "^7.23.3",
@@ -62,5 +63,10 @@
   "main": "server.js",
   "author": "",
   "license": "ISC",
-  "proxy": "http://localhost:3000/"
+  "proxy": "http://localhost:3000/",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.0"
+  }
 }
