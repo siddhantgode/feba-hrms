@@ -31,6 +31,38 @@ function Engagement2() {
   const [isGridView, setIsGridView] = useState(true);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [visiblePopover, setVisiblePopover] = useState(null); // Track which popover is visible
+
+// Function to show the popover for a specific row
+const handleShow = (rowId) => {
+  setVisiblePopover(rowId); // Set visible popover to the clicked row's ID
+};
+
+// Function to hide the popover
+const handleHide = () => {
+  setVisiblePopover(null); // Clear the visible popover
+};
+
+// Add a click event listener to detect clicks outside the popover
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    const popoverElement = document.querySelector(`#popover-${visiblePopover}`);
+    if (popoverElement && !popoverElement.contains(event.target)) {
+      setVisiblePopover(null); // Hide the popover if clicked outside
+    }
+  };
+
+  // Attach the event listener when a popover is visible
+  if (visiblePopover !== null) {
+    document.addEventListener("click", handleClickOutside);
+  }
+
+  // Cleanup the event listener when the popover is hidden
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, [visiblePopover]);
+
 
   // Fetch engagements from Firestore
   const fetchEngagements = async () => {
@@ -255,44 +287,54 @@ const handleEditClick = (engagement) => {
       headerName: "Updates",
       flex: 1,
       renderCell: (params) => {
-        const updates = params.row.updates || []; // Get all updates for the row
-    
+        const updates = params.row.updates || []; // Use params.row to get updates for the current row
+  
         return (
-          <OverlayTrigger
-            trigger="click"
-            placement="right"
-            overlay={
-              <Popover id={`popover-${params.row.id}`}>
-                <Popover.Header as="h3">Updates</Popover.Header>
-                <Popover.Body>
-                  {updates.length > 0 ? (
-                    <div>
-                      {updates.map((update, index) => (
-                        <div key={index} className="mb-2">
-                          <p>
-                            <strong>Candidate:</strong> {update.candidate || "N/A"}
-                          </p>
-                          <p>
-                            <strong>Status:</strong> {update.status || "N/A"}
-                          </p>
-                          <p>
-                            <strong>Remarks:</strong> {update.remarks || "N/A"}
-                          </p>
-                          <hr />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p>No updates available</p>
-                  )}
-                </Popover.Body>
-              </Popover>
-            }
-          >
-            <BootstrapButton variant="info" size="sm">
-              View Updates
-            </BootstrapButton>
-          </OverlayTrigger>
+          <div>
+            {updates.length > 0 ? (
+              <div className="d-flex align-items-center mb-3">
+                <OverlayTrigger
+                  trigger="click"
+                  placement="right"
+                  show={visiblePopover === params.row.id} // Show only for the clicked row
+                  overlay={
+                    <Popover id={`popover-${params.row.id}`}>
+                      <Popover.Header as="h3">Updates</Popover.Header>
+                      <Popover.Body>
+                        {updates.map((update, index) => (
+                          <div key={index} className="mb-2">
+                            <p>
+                              <strong>Candidate:</strong> {update.candidate || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Status:</strong> {update.status || "N/A"}
+                            </p>
+                            <p>
+                              <strong>Remarks:</strong> {update.remarks || "N/A"}
+                            </p>
+                            <hr />
+                          </div>
+                        ))}
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span
+  onClick={() => handleShow(params.row.id)} // Show popover for the clicked row
+  style={{
+    color: "#007bff", // Bootstrap link color
+    cursor: "pointer",
+    textDecoration: "underline", // Add underline to mimic a link
+  }}
+>
+  Show Updates
+</span>
+                </OverlayTrigger>
+              </div>
+            ) : (
+              <p>No updates available</p>
+            )}
+          </div>
         );
       },
     },
@@ -308,7 +350,7 @@ const handleEditClick = (engagement) => {
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => handleEditClick(params.row)} // Use params.row
+            onClick={() => handleEditClick(params.row)}
           >
             Edit
           </Button>
@@ -318,8 +360,8 @@ const handleEditClick = (engagement) => {
             color="secondary"
             size="small"
             onClick={() => {
-              setDeleteId(params.row.id); // Use params.row.id
-              setOpenDeleteDialog(true); // Open the confirmation dialog
+              setDeleteId(params.row.id);
+              setOpenDeleteDialog(true);
             }}
           >
             Delete
