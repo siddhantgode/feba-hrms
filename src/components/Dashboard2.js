@@ -190,9 +190,9 @@ function Dashboard2() {
       paddingRight: "8px", // Avoid content cutoff when a scrollbar appears
     }}
   >
-    <Typography variant="subtitle1" gutterBottom>
-      CURRENT ENGAGEMENTS
-    </Typography>
+   <Typography variant="subtitle1" gutterBottom align="center">
+  CURRENT ENGAGEMENTS
+</Typography>
     <EngagementTable /> {/* Render EngagementTable */}
   </div>
 </div>

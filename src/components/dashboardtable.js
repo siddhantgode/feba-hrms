@@ -49,8 +49,8 @@ const EngagementTable = () => {
   const handleMouseEnter = (event, updates) => {
     setPopoverData(updates);
     setPopoverPosition({
-      x: event.pageX + 10, // Position 10px to the right of the mouse pointer
-      y: event.pageY + 10, // 10px below the mouse pointer
+      x: event.pageX + 50, // Position 10px to the right of the mouse pointer
+      y: event.pageY -80, // 10px below the mouse pointer
     });
   };
 
